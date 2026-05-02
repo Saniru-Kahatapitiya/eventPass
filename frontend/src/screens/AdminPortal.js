@@ -466,13 +466,16 @@ const AdminPortal = ({ navigation }) => {
 
             {activeTab === 'Users' && (
                 <View style={styles.content}>
-                    <Text style={styles.sectionTitle}>User Management</Text>
+                    <View style={styles.dashboardHero}>
+                        <Text style={styles.sectionTitle}>User Registry</Text>
+                        <Text style={styles.dashboardSubtitle}>Manage platform access and monitor user activity</Text>
+                    </View>
                     
                     <View style={styles.searchBar}>
-                        <Ionicons name="search-outline" size={20} color="#666" />
+                        <Ionicons name="people-outline" size={20} color="#FFD301" />
                         <TextInput 
                             style={styles.searchInput} 
-                            placeholder="Find by email or name..." 
+                            placeholder="Search by name or email address..." 
                             placeholderTextColor="#666"
                             value={userSearch}
                             onChangeText={setUserSearch}
@@ -489,29 +492,56 @@ const AdminPortal = ({ navigation }) => {
                                     u.name.toLowerCase().includes(userSearch.toLowerCase())
                                 )
                                 .map(user => (
-                                <View key={user._id} style={styles.userCard}>
-                                    <View style={styles.userInfo}>
-                                        <View style={styles.userAvatar}>
-                                            <Text style={styles.avatarText}>{user.name.charAt(0).toUpperCase()}</Text>
+                                <View key={user._id} style={styles.modernUserCard}>
+                                    <View style={styles.userCardMain}>
+                                        <View style={styles.userAvatarContainer}>
+                                            <View style={[styles.modernAvatar, { backgroundColor: user.status === 'active' ? '#FFD301' : '#333' }]}>
+                                                <Text style={[styles.avatarText, { color: user.status === 'active' ? '#000' : '#888' }]}>
+                                                    {user.name.charAt(0).toUpperCase()}
+                                                </Text>
+                                            </View>
+                                            <View style={[styles.statusIndicator, { backgroundColor: user.status === 'active' ? '#4CAF50' : '#F44336' }]} />
                                         </View>
-                                        <View>
-                                            <Text style={styles.userName}>{user.name}</Text>
-                                            <Text style={styles.userEmail}>{user.email}</Text>
+                                        
+                                        <View style={styles.userMeta}>
+                                            <Text style={styles.modernUserName}>{user.name}</Text>
+                                            <Text style={styles.modernUserEmail}>{user.email}</Text>
+                                            <View style={styles.roleBadge}>
+                                                <Text style={styles.roleText}>{user.role.toUpperCase()}</Text>
+                                            </View>
                                         </View>
                                     </View>
-                                    <View style={styles.userStatusContainer}>
-                                        <View style={[styles.statusDot, user.status === 'active' ? styles.dotActive : styles.dotInactive]} />
+
+                                    <View style={styles.userCardActions}>
+                                        <View style={styles.statusInfo}>
+                                            <Text style={styles.statusLabel}>Account Status</Text>
+                                            <Text style={[styles.statusValue, { color: user.status === 'active' ? '#4CAF50' : '#F44336' }]}>
+                                                {user.status.toUpperCase()}
+                                            </Text>
+                                        </View>
+                                        
                                         <TouchableOpacity 
-                                            style={[styles.statusBtn, user.status === 'active' ? styles.deactivateBtn : styles.activateBtn]}
+                                            style={[styles.modernStatusBtn, user.status === 'active' ? styles.modernDeactivate : styles.modernActivate]}
                                             onPress={() => toggleUserStatus(user._id)}
                                         >
-                                            <Text style={[styles.statusBtnText, user.status === 'active' ? styles.deactivateText : styles.activateText]}>
-                                                {user.status === 'active' ? 'Deactive' : 'Active'}
+                                            <Ionicons 
+                                                name={user.status === 'active' ? 'person-remove-outline' : 'person-add-outline'} 
+                                                size={18} 
+                                                color={user.status === 'active' ? '#F44336' : '#4CAF50'} 
+                                            />
+                                            <Text style={[styles.modernBtnText, { color: user.status === 'active' ? '#F44336' : '#4CAF50' }]}>
+                                                {user.status === 'active' ? 'Deactivate' : 'Activate'}
                                             </Text>
                                         </TouchableOpacity>
                                     </View>
                                 </View>
                             ))}
+                            {users.length === 0 && (
+                                <View style={styles.emptyContainer}>
+                                    <Ionicons name="people-outline" size={48} color="#222" />
+                                    <Text style={styles.emptyText}>No users found in the registry.</Text>
+                                </View>
+                            )}
                         </ScrollView>
                     )}
                 </View>
@@ -660,6 +690,45 @@ const styles = StyleSheet.create({
     bookingManageHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 },
     bookingManageId: { color: '#FFD301', fontSize: 16, fontWeight: 'bold' },
     bookingManageUser: { color: '#666', fontSize: 12, marginTop: 2 },
+    userAvatar: { width: 40, height: 40, borderRadius: 20, backgroundColor: '#FFD301', justifyContent: 'center', alignItems: 'center' },
+    avatarText: { color: '#000', fontWeight: 'bold', fontSize: 16 },
+    userName: { color: '#FFF', fontSize: 16, fontWeight: 'bold' },
+    userEmail: { color: '#666', fontSize: 12 },
+    statusBtn: { paddingHorizontal: 12, paddingVertical: 6, borderRadius: 10, borderWidth: 1 },
+    statusBtnText: { fontSize: 11, fontWeight: 'bold' },
+    deactivateBtn: { borderColor: '#f44336', backgroundColor: '#f4433615' },
+    activateBtn: { borderColor: '#4CAF50', backgroundColor: '#4CAF5015' },
+    deactivateText: { color: '#f44336' },
+    activateText: { color: '#4CAF50' },
+
+    // Modern User Card Styles
+    modernUserCard: { 
+        backgroundColor: '#111', 
+        borderRadius: 24, 
+        padding: 20, 
+        marginBottom: 16, 
+        borderWidth: 1, 
+        borderColor: '#222',
+        boxShadow: '0 4px 20px rgba(0,0,0,0.5)'
+    },
+    userCardMain: { flexDirection: 'row', alignItems: 'center', gap: 15, marginBottom: 20 },
+    userAvatarContainer: { position: 'relative' },
+    modernAvatar: { width: 56, height: 56, borderRadius: 18, justifyContent: 'center', alignItems: 'center' },
+    statusIndicator: { position: 'absolute', bottom: -2, right: -2, width: 16, height: 16, borderRadius: 8, borderWidth: 3, borderColor: '#111' },
+    userMeta: { flex: 1, gap: 2 },
+    modernUserName: { color: '#FFF', fontSize: 18, fontWeight: 'bold' },
+    modernUserEmail: { color: '#666', fontSize: 13 },
+    roleBadge: { backgroundColor: '#1A1A1A', alignSelf: 'flex-start', paddingHorizontal: 8, paddingVertical: 2, borderRadius: 6, marginTop: 4, borderWidth: 1, borderColor: '#333' },
+    roleText: { color: '#FFD301', fontSize: 9, fontWeight: '900', letterSpacing: 1 },
+    userCardActions: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingTop: 15, borderTopWidth: 1, borderTopColor: '#222' },
+    statusInfo: { gap: 2 },
+    statusLabel: { color: '#444', fontSize: 10, fontWeight: 'bold' },
+    statusValue: { fontSize: 12, fontWeight: '900', letterSpacing: 0.5 },
+    modernStatusBtn: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 15, paddingVertical: 10, borderRadius: 12, borderWidth: 1 },
+    modernDeactivate: { borderColor: '#F4433622', backgroundColor: '#F4433610' },
+    modernActivate: { borderColor: '#4CAF5022', backgroundColor: '#4CAF5010' },
+    modernBtnText: { fontSize: 13, fontWeight: 'bold' },
+    emptyContainer: { alignItems: 'center', marginTop: 100, gap: 15 },
     statusBadge: { paddingHorizontal: 10, paddingVertical: 5, borderRadius: 8 },
     statusText: { fontSize: 10, fontWeight: 'bold' },
     bookingManageEvent: { color: '#FFF', fontSize: 18, fontWeight: 'bold', marginBottom: 15 },
