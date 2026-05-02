@@ -98,17 +98,7 @@ exports.updateEvent = async (req, res) => {
         const diffTime = Math.abs(new Date() - event.createdAt);
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
         
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        
-        if (event.date <= today) {
-            return res.status(403).json({ error: 'Cannot edit old events' });
-        }
-
-        if (diffDays > 3) {
-            return res.status(403).json({ error: 'Editing window (3 days) has expired' });
-        }
-
+        // Remove restrictive editing windows for Admin
         const { title, date, time, location, description, tickets } = req.body;
         if (title) event.title = title;
         if (date) event.date = date;
@@ -117,10 +107,32 @@ exports.updateEvent = async (req, res) => {
         if (description) event.description = description;
         if (tickets) {
             const parsedTickets = typeof tickets === 'string' ? JSON.parse(tickets) : tickets;
-            event.tickets = parsedTickets.map(t => ({
-                ...t,
-                remainingQuantity: t.quantity
-            }));
+            
+            // Smart update for tickets to preserve sold counts
+            event.tickets = parsedTickets.map(newTicket => {
+                // Find if this ticket type already existed
+                const existingTicket = event.tickets.find(et => et.type === newTicket.type);
+                
+                if (existingTicket) {
+                    const soldCount = existingTicket.quantity - existingTicket.remainingQuantity;
+                    const newTotal = parseInt(newTicket.quantity);
+                    // New remaining is the new total minus what was already sold
+                    const newRemaining = Math.max(0, newTotal - soldCount);
+                    
+                    return {
+                        ...newTicket,
+                        quantity: newTotal,
+                        remainingQuantity: newRemaining
+                    };
+                } else {
+                    // New ticket type, remaining equals total
+                    return {
+                        ...newTicket,
+                        quantity: parseInt(newTicket.quantity),
+                        remainingQuantity: parseInt(newTicket.quantity)
+                    };
+                }
+            });
         }
         if (req.file) event.image = `/uploads/${req.file.filename}`;
 
