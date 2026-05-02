@@ -10,30 +10,37 @@ const EventCard = ({ event, eventType, onEdit, onDelete, onView, isAdmin = true,
 
     return (
         <View style={styles.eventCard}>
-            <Image 
-                source={imageUrl ? { uri: imageUrl } : null} 
-                style={styles.eventImage} 
-                resizeMode="cover"
-            />
-            
-            <View style={styles.cardContent}>
-                <View style={styles.mainInfo}>
-                    <Text style={styles.eventTitle}>{event.title}</Text>
-                    
-                    <View style={styles.detailsGrid}>
-                        <View style={styles.infoRow}>
-                            <Ionicons name="calendar-outline" size={14} color="#FFD301" />
-                            <Text style={styles.eventDetailText}>
-                                {new Date(event.date).toLocaleDateString()} at {event.time || 'N/A'}
-                            </Text>
-                        </View>
-                        <View style={styles.infoRow}>
-                            <Ionicons name="location-outline" size={14} color="#FFD301" />
-                            <Text style={styles.eventDetailText} numberOfLines={1}>{event.location}</Text>
+            <TouchableOpacity 
+                activeOpacity={0.7}
+                onPress={() => onView(event)}
+            >
+                <Image 
+                    source={imageUrl ? { uri: imageUrl } : null} 
+                    style={styles.eventImage} 
+                    resizeMode="cover"
+                />
+                
+                <View style={styles.cardContent}>
+                    <View style={styles.mainInfo}>
+                        <Text style={styles.eventTitle}>{event.title}</Text>
+                        
+                        <View style={styles.detailsGrid}>
+                            <View style={styles.infoRow}>
+                                <Ionicons name="calendar-outline" size={14} color="#FFD301" />
+                                <Text style={styles.eventDetailText}>
+                                    {new Date(event.date).toLocaleDateString()} at {event.time || 'N/A'}
+                                </Text>
+                            </View>
+                            <View style={styles.infoRow}>
+                                <Ionicons name="location-outline" size={14} color="#FFD301" />
+                                <Text style={styles.eventDetailText} numberOfLines={1}>{event.location}</Text>
+                            </View>
                         </View>
                     </View>
                 </View>
+            </TouchableOpacity>
 
+            <View style={[styles.cardContent, { paddingTop: 0 }]}>
                 <View style={styles.eventActions}>
                     {isAdmin ? (
                         eventType === 'active' ? (
@@ -60,22 +67,13 @@ const EventCard = ({ event, eventType, onEdit, onDelete, onView, isAdmin = true,
                                     <Text style={[styles.btnText, { color: '#888' }]}>SOLD OUT</Text>
                                 </View>
                             ) : (
-                                <View style={{ flexDirection: 'row', gap: 10 }}>
-                                    <TouchableOpacity 
-                                        style={[styles.actionBtn, styles.viewBtn]} 
-                                        onPress={() => onView(event)}
-                                    >
-                                        <Ionicons name="eye-outline" size={18} color="#FFF" />
-                                        <Text style={[styles.btnText, { color: '#FFF' }]}>Details</Text>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity 
-                                        style={[styles.actionBtn, styles.editBtn]} 
-                                        onPress={() => onBook(event)}
-                                    >
-                                        <Ionicons name="ticket-outline" size={18} color="#000" />
-                                        <Text style={styles.btnText}>Book Now</Text>
-                                    </TouchableOpacity>
-                                </View>
+                                <TouchableOpacity 
+                                    style={[styles.actionBtn, styles.editBtn]} 
+                                    onPress={() => onBook(event)}
+                                >
+                                    <Ionicons name="ticket-outline" size={18} color="#000" />
+                                    <Text style={styles.btnText}>Book Now</Text>
+                                </TouchableOpacity>
                             )}
                         </View>
                     )}

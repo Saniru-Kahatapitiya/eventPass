@@ -82,7 +82,7 @@ const BookingModal = ({ visible, onClose, event, onBookingComplete, readOnly = f
                         <TouchableOpacity onPress={onClose}>
                             <Ionicons name="close" size={28} color="#FFF" />
                         </TouchableOpacity>
-                    </div>
+                    </View>
 
                     <ScrollView style={styles.modalBody} showsVerticalScrollIndicator={false}>
                         <Image source={imageUrl ? { uri: imageUrl } : null} style={styles.eventImage} />

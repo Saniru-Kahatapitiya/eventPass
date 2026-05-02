@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import axiosInstance from '../api/axios';
 import EventCard from '../components/EventCard';
 import BookingModal from '../components/BookingModal';
+import EventDetailsModal from '../components/EventDetailsModal';
 import { ActivityIndicator, TextInput } from 'react-native';
 
 const UserPortal = ({ navigation }) => {
@@ -15,7 +16,7 @@ const UserPortal = ({ navigation }) => {
     const [search, setSearch] = useState('');
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
-    const [isReadOnly, setIsReadOnly] = useState(false);
+    const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
 
     useEffect(() => {
         const getUser = async () => {
@@ -45,15 +46,21 @@ const UserPortal = ({ navigation }) => {
 
     const openBooking = (event) => {
         setSelectedEvent(event);
-        setIsReadOnly(false);
         setIsBookingModalOpen(true);
     };
 
     const openDetails = (event) => {
+        console.log('Opening Details for:', event.title);
         setSelectedEvent(event);
-        setIsReadOnly(true);
-        setIsBookingModalOpen(true);
+        setIsDetailsModalOpen(true);
+        // Alert.alert('Debug', 'Opening modal for ' + event.title); // Temporary check
     };
+
+    useEffect(() => {
+        if (isDetailsModalOpen) {
+            console.log('MODAL STATUS: Open', selectedEvent?.title);
+        }
+    }, [isDetailsModalOpen, selectedEvent]);
 
     const handleLogout = async () => {
         await AsyncStorage.removeItem('token');
@@ -173,8 +180,15 @@ const UserPortal = ({ navigation }) => {
                 onClose={() => setIsBookingModalOpen(false)}
                 event={selectedEvent}
                 onBookingComplete={fetchEvents}
-                readOnly={isReadOnly}
             />
+
+            {selectedEvent && (
+                <EventDetailsModal 
+                    visible={isDetailsModalOpen}
+                    onClose={() => setIsDetailsModalOpen(false)}
+                    event={selectedEvent}
+                />
+            )}
         </SafeAreaView>
     );
 };
