@@ -18,6 +18,7 @@ const AdminPortal = ({ navigation }) => {
     const [activeTab, setActiveTab] = useState('Dashboard');
     const [events, setEvents] = useState([]);
     const [search, setSearch] = useState('');
+    const [userSearch, setUserSearch] = useState('');
     const [eventType, setEventType] = useState('active'); // 'active' or 'old'
     const [loading, setLoading] = useState(false);
     
@@ -331,11 +332,28 @@ const AdminPortal = ({ navigation }) => {
             {activeTab === 'Users' && (
                 <View style={styles.content}>
                     <Text style={styles.sectionTitle}>User Management</Text>
+                    
+                    <View style={styles.searchBar}>
+                        <Ionicons name="search-outline" size={20} color="#666" />
+                        <TextInput 
+                            style={styles.searchInput} 
+                            placeholder="Find by email or name..." 
+                            placeholderTextColor="#666"
+                            value={userSearch}
+                            onChangeText={setUserSearch}
+                        />
+                    </View>
+
                     {usersLoading ? (
                         <ActivityIndicator color="#FFD301" size="large" />
                     ) : (
                         <ScrollView style={styles.eventList} showsVerticalScrollIndicator={false}>
-                            {users.map(user => (
+                            {users
+                                .filter(u => 
+                                    u.email.toLowerCase().includes(userSearch.toLowerCase()) || 
+                                    u.name.toLowerCase().includes(userSearch.toLowerCase())
+                                )
+                                .map(user => (
                                 <View key={user._id} style={styles.userCard}>
                                     <View style={styles.userInfo}>
                                         <View style={styles.userAvatar}>
