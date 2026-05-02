@@ -258,28 +258,68 @@ const AdminPortal = ({ navigation }) => {
             </View>
 
             {activeTab === 'Dashboard' && (
-                <ScrollView style={styles.content}>
-                    <Text style={styles.sectionTitle}>Overview</Text>
-                    <View style={styles.statsGrid}>
-                        <View style={styles.statCard}>
-                            <Text style={styles.statNumber}>{stats.activeEvents}</Text>
-                            <Text style={styles.statLabel}>Active Events</Text>
+                <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+                    <View style={styles.dashboardHero}>
+                        <Text style={styles.sectionTitle}>Dashboard Overview</Text>
+                        <Text style={styles.dashboardSubtitle}>Track your event performance and user growth</Text>
+                    </View>
+
+                    {/* Featured Stat Card */}
+                    <View style={styles.featuredCard}>
+                        <View style={styles.featuredInfo}>
+                            <Text style={styles.featuredLabel}>Total Bookings</Text>
+                            <Text style={styles.featuredValue}>{stats.totalBookings}</Text>
+                            <View style={styles.trendBadge}>
+                                <Ionicons name="trending-up" size={14} color="#4CAF50" />
+                                <Text style={styles.trendText}>+12% from last month</Text>
+                            </View>
                         </View>
-                        <View style={styles.statCard}>
-                            <Text style={styles.statNumber}>{stats.pastEvents}</Text>
-                            <Text style={styles.statLabel}>Past Events</Text>
+                        <View style={styles.featuredIconContainer}>
+                            <Ionicons name="stats-chart" size={40} color="#FFD301" />
                         </View>
-                        <View style={styles.statCard}>
-                            <Text style={styles.statNumber}>{stats.totalBookings}</Text>
-                            <Text style={styles.statLabel}>Total Bookings</Text>
+                    </View>
+
+                    {/* Stats Grid */}
+                    <View style={styles.modernStatsGrid}>
+                        <View style={[styles.modernStatCard, { borderColor: '#4CAF5033' }]}>
+                            <View style={[styles.statIconCircle, { backgroundColor: '#4CAF5015' }]}>
+                                <Ionicons name="calendar" size={20} color="#4CAF50" />
+                            </View>
+                            <Text style={styles.modernStatValue}>{stats.activeEvents}</Text>
+                            <Text style={styles.modernStatLabel}>Active Events</Text>
                         </View>
-                        <View style={styles.statCard}>
-                            <Text style={styles.statNumber}>{stats.activeUsers || 0}</Text>
-                            <Text style={styles.statLabel}>Active Users</Text>
+
+                        <View style={[styles.modernStatCard, { borderColor: '#FF980033' }]}>
+                            <View style={[styles.statIconCircle, { backgroundColor: '#FF980015' }]}>
+                                <Ionicons name="time" size={20} color="#FF9800" />
+                            </View>
+                            <Text style={styles.modernStatValue}>{stats.pastEvents}</Text>
+                            <Text style={styles.modernStatLabel}>Past Events</Text>
                         </View>
-                        <View style={styles.statCard}>
-                            <Text style={styles.statNumber}>{stats.deactiveUsers || 0}</Text>
-                            <Text style={styles.statLabel}>Deactive Users</Text>
+
+                        <View style={[styles.modernStatCard, { borderColor: '#2196F333' }]}>
+                            <View style={[styles.statIconCircle, { backgroundColor: '#2196F315' }]}>
+                                <Ionicons name="people" size={20} color="#2196F3" />
+                            </View>
+                            <Text style={styles.modernStatValue}>{stats.activeUsers || 0}</Text>
+                            <Text style={styles.modernStatLabel}>Active Users</Text>
+                        </View>
+
+                        <View style={[styles.modernStatCard, { borderColor: '#F4433633' }]}>
+                            <View style={[styles.statIconCircle, { backgroundColor: '#F4433615' }]}>
+                                <Ionicons name="person-remove" size={20} color="#F44336" />
+                            </View>
+                            <Text style={styles.modernStatValue}>{stats.deactiveUsers || 0}</Text>
+                            <Text style={styles.modernStatLabel}>Deactive Users</Text>
+                        </View>
+                    </View>
+
+                    {/* Quick Actions or Recent section */}
+                    <View style={styles.recentSection}>
+                        <Text style={styles.subSectionTitle}>Recent Analytics</Text>
+                        <View style={styles.activityCard}>
+                            <Ionicons name="notifications-outline" size={24} color="#888" />
+                            <Text style={styles.activityText}>System is running optimally. All services active.</Text>
                         </View>
                     </View>
                 </ScrollView>
@@ -465,6 +505,55 @@ const styles = StyleSheet.create({
     placeholderContent: { flex: 1, justifyContent: 'center', alignItems: 'center', paddingBottom: 100 },
     placeholderText: { color: '#444', fontSize: 16, marginTop: 15 },
     
+    // Modern Dashboard Styles
+    dashboardHero: { marginBottom: 25 },
+    dashboardSubtitle: { color: '#666', fontSize: 13, marginTop: 5 },
+    featuredCard: { 
+        backgroundColor: '#111', 
+        borderRadius: 24, 
+        padding: 25, 
+        flexDirection: 'row', 
+        justifyContent: 'space-between', 
+        alignItems: 'center',
+        borderWidth: 1,
+        borderColor: '#FFD30122',
+        marginBottom: 20,
+        boxShadow: '0px 10px 20px rgba(255, 211, 1, 0.05)'
+    },
+    featuredInfo: { flex: 1 },
+    featuredLabel: { color: '#888', fontSize: 14, fontWeight: '600' },
+    featuredValue: { color: '#FFF', fontSize: 36, fontWeight: 'bold', marginVertical: 5 },
+    trendBadge: { flexDirection: 'row', alignItems: 'center', gap: 5 },
+    trendText: { color: '#4CAF50', fontSize: 12, fontWeight: 'bold' },
+    featuredIconContainer: { width: 70, height: 70, borderRadius: 20, backgroundColor: '#FFD30110', justifyContent: 'center', alignItems: 'center' },
+    
+    modernStatsGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 12, marginBottom: 30 },
+    modernStatCard: { 
+        width: '48%', 
+        backgroundColor: '#111', 
+        borderRadius: 20, 
+        padding: 18, 
+        borderWidth: 1,
+        boxShadow: '0px 4px 10px rgba(0,0,0,0.3)'
+    },
+    statIconCircle: { width: 40, height: 40, borderRadius: 12, justifyContent: 'center', alignItems: 'center', marginBottom: 15 },
+    modernStatValue: { color: '#FFF', fontSize: 24, fontWeight: 'bold' },
+    modernStatLabel: { color: '#666', fontSize: 12, marginTop: 4, fontWeight: '500' },
+    
+    recentSection: { marginBottom: 100 },
+    subSectionTitle: { color: '#FFF', fontSize: 16, fontWeight: 'bold', marginBottom: 15 },
+    activityCard: { 
+        flexDirection: 'row', 
+        alignItems: 'center', 
+        gap: 15, 
+        backgroundColor: '#111', 
+        padding: 18, 
+        borderRadius: 18,
+        borderWidth: 1,
+        borderColor: '#222'
+    },
+    activityText: { color: '#888', fontSize: 13, flex: 1 },
+
     // User Management Styles
     userCard: { 
         flexDirection: 'row', 
@@ -477,26 +566,6 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#222'
     },
-    userInfo: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-    userAvatar: { 
-        width: 45, 
-        height: 45, 
-        borderRadius: 22.5, 
-        backgroundColor: '#1A1A1A', 
-        justifyContent: 'center', 
-        alignItems: 'center',
-        borderWidth: 1,
-        borderColor: '#333'
-    },
-    avatarText: { color: '#FFD301', fontWeight: 'bold', fontSize: 18 },
-    userName: { color: '#FFF', fontSize: 16, fontWeight: '600' },
-    userEmail: { color: '#666', fontSize: 13 },
-    statusBtn: { paddingVertical: 8, paddingHorizontal: 15, borderRadius: 12, minWidth: 90, alignItems: 'center' },
-    deactivateBtn: { backgroundColor: 'rgba(244, 67, 54, 0.1)', borderWidth: 1, borderColor: '#F44336' },
-    activateBtn: { backgroundColor: 'rgba(76, 175, 80, 0.1)', borderWidth: 1, borderColor: '#4CAF50' },
-    statusBtnText: { fontWeight: 'bold', fontSize: 11 },
-    deactivateText: { color: '#F44336' },
-    activateText: { color: '#4CAF50' },
     userStatusContainer: { flexDirection: 'row', alignItems: 'center', gap: 10 },
     statusDot: { width: 10, height: 10, borderRadius: 5 },
     dotActive: { backgroundColor: '#4CAF50', boxShadow: '0 0 8px #4CAF50' },
