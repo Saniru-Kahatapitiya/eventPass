@@ -21,4 +21,17 @@ axiosInstance.interceptors.request.use(
     }
 );
 
+// Add a response interceptor to handle token expiration
+axiosInstance.interceptors.response.use(
+    (response) => response,
+    async (error) => {
+        if (error.response && error.response.status === 401) {
+            // Token is invalid or expired
+            await AsyncStorage.clear();
+            // Optional: You could trigger a global event here to redirect to login
+        }
+        return Promise.reject(error);
+    }
+);
+
 export default axiosInstance;
