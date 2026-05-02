@@ -273,6 +273,14 @@ const AdminPortal = ({ navigation }) => {
                             <Text style={styles.statNumber}>{stats.totalBookings}</Text>
                             <Text style={styles.statLabel}>Total Bookings</Text>
                         </View>
+                        <View style={styles.statCard}>
+                            <Text style={styles.statNumber}>{stats.activeUsers || 0}</Text>
+                            <Text style={styles.statLabel}>Active Users</Text>
+                        </View>
+                        <View style={styles.statCard}>
+                            <Text style={styles.statNumber}>{stats.deactiveUsers || 0}</Text>
+                            <Text style={styles.statLabel}>Deactive Users</Text>
+                        </View>
                     </View>
                 </ScrollView>
             )}

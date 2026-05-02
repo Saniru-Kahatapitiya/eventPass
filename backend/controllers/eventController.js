@@ -1,4 +1,6 @@
 const Event = require('../models/Event');
+const User = require('../models/User');
+const Booking = require('../models/Booking');
 
 // Create Event
 exports.createEvent = async (req, res) => {
@@ -161,13 +163,20 @@ exports.getStats = async (req, res) => {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 
-        const activeCount = await Event.countDocuments({ date: { $gte: today } });
-        const pastCount = await Event.countDocuments({ date: { $lt: today } });
+        const activeEvents = await Event.countDocuments({ date: { $gte: today } });
+        const pastEvents = await Event.countDocuments({ date: { $lt: today } });
+        const totalBookings = await Booking.countDocuments();
+        
+        // New User Stats
+        const activeUsers = await User.countDocuments({ role: 'user', status: 'active' });
+        const deactiveUsers = await User.countDocuments({ role: 'user', status: 'deactive' });
 
         res.json({
-            activeEvents: activeCount,
-            pastEvents: pastCount,
-            totalBookings: 0 // Placeholder for now until bookings are implemented
+            activeEvents,
+            pastEvents,
+            totalBookings,
+            activeUsers,
+            deactiveUsers
         });
     } catch (error) {
         res.status(500).json({ error: error.message });
