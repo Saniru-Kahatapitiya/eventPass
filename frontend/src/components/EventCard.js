@@ -61,7 +61,17 @@ const EventCard = ({ event, eventType, onEdit, onDelete, onView, isAdmin = true,
                             </TouchableOpacity>
                         )
                     ) : (
-                        <View style={{ width: '100%' }}>
+                        <View style={{ width: '100%', gap: 10 }}>
+                            {/* View Details Button */}
+                            <TouchableOpacity 
+                                style={[styles.actionBtn, styles.viewBtn]} 
+                                onPress={() => onView(event)}
+                            >
+                                <Ionicons name="eye-outline" size={18} color="#FFF" />
+                                <Text style={[styles.btnText, { color: '#FFF' }]}>View Details</Text>
+                            </TouchableOpacity>
+
+                            {/* Book Now Button */}
                             {event.tickets.reduce((acc, t) => acc + t.remainingQuantity, 0) === 0 ? (
                                 <View style={[styles.actionBtn, { backgroundColor: '#333' }]}>
                                     <Text style={[styles.btnText, { color: '#888' }]}>SOLD OUT</Text>
