@@ -77,9 +77,6 @@ const UserPortal = ({ navigation }) => {
                             <Ionicons name="sparkles" size={30} color="#FFD301" style={{marginBottom: 15}} />
                             <Text style={styles.cardTitle}>Your Experience Starts Here</Text>
                             <Text style={styles.cardSubtitle}>Explore the latest events and book your tickets with EventPass.</Text>
-                            <TouchableOpacity style={styles.exploreBtn}>
-                                <Text style={styles.exploreBtnText}>Explore Now</Text>
-                            </TouchableOpacity>
                         </View>
 
                         <Text style={styles.sectionTitle}>Upcoming Events</Text>
