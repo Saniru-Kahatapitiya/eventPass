@@ -7,7 +7,7 @@ exports.createEvent = async (req, res) => {
         console.log('Body:', req.body);
         console.log('File:', req.file);
 
-        const { title, date, location, description, tickets } = req.body;
+        const { title, date, time, location, description, tickets } = req.body;
         
         if (!title || !date || !location || !description) {
             return res.status(400).json({ error: 'Title, Date, Location, and Description are required' });
@@ -34,6 +34,7 @@ exports.createEvent = async (req, res) => {
         const newEvent = new Event({
             title,
             date: new Date(date),
+            time,
             location,
             description,
             tickets: ticketsWithRemaining,
@@ -97,9 +98,10 @@ exports.updateEvent = async (req, res) => {
             return res.status(403).json({ error: 'Editing window (3 days) has expired' });
         }
 
-        const { title, date, location, description, tickets } = req.body;
+        const { title, date, time, location, description, tickets } = req.body;
         if (title) event.title = title;
         if (date) event.date = date;
+        if (time) event.time = time;
         if (location) event.location = location;
         if (description) event.description = description;
         if (tickets) {
